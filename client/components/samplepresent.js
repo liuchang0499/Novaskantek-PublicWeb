@@ -1,5 +1,8 @@
 import React from 'react';
 import { render } from 'react-dom';
+import mobx from 'mobx';
+import { observer, inject, toJS } from 'mobx-react';
+import request from 'superagent';
 import _Row from 'antd/lib/row';
 import _Col from 'antd/lib/col';
 import _Card from 'antd/lib/card';
@@ -37,24 +40,44 @@ const styles = {
   }
 }
 
-const SampleSpots = function SampleSpots(props) {
-  function render() {
-    return (
-      <_Card style={{  }} bordered={false} bodyStyle={{ padding: 0 }}>
-        <div className="bg_gray">
-          <_Col span={8}><img src="http://fakeimg.pl/350x200/" style={styles.conpsize }/></_Col>
-          <_Col span={16}><p style={ styles.p }>{ props.casenum }</p></_Col>
+const SampleSpots = (inject('store')(function SampleSpots (props){
+  function render(){
+    return(
+        <div>
+          { props.store.sampleList.map(function(num){
+            return(
+               <_Card style={{  }} bordered={false} bodyStyle={{ padding: 0 }}>
+                  <div className="bg_gray">
+                    <_Col span={8}><img src="http://fakeimg.pl/350x200/" style={styles.conpsize }/></_Col>
+                    <_Col span={16}><p style={ styles.p }>{ num.IntegrationName }</p></_Col>
+                  </div>
+                </_Card>
+            )
+          }) 
+        }   
         </div>
-      </_Card>
-    )
+      )
   }
-  return render();
-}
+    return observer({
+    render,
+  });
+}));
 
-const SamplePresent = React.createClass ({
-  render(){
+
+const SamplePresent =(inject('store')(function SamplePresent (props){
+  function componentDidMount(){
+    console.log('Samplepresent mount', this);
+    console.log('fetchApplication');
+    request.get('/api/integration')
+      .end(function(err, res){
+      console.log('list add successful');
+      props.store.setSampleList(res.body);
+    })
+  }
+
+  function render(){
     return (
-	     <div style= {{ 'paddingTop': '120px', 'paddingBottom':'60px' }}>
+       <div style= {{ 'paddingTop': '120px', 'paddingBottom':'60px' }}>
         <_Row>
           <_Col span={16} offset={4}>
             <_Col style={styles.headingfont} span={21}>{ heading }</_Col>
@@ -65,25 +88,17 @@ const SamplePresent = React.createClass ({
         </_Row>
         <_Row>
           <_Col span={16} offset={4}>
-            <_Row>
-              <_Col style={ styles.straightline_long } ></_Col>
-            </_Row>
             <_Row >
-              <_Col><SampleSpots casenum={ caseone }/></_Col>
+              <_Col><SampleSpots/></_Col>
             </_Row>
-            <_Row >
-              <_Col><SampleSpots casenum={ casetwo }/></_Col>
-            </_Row>
-            <_Row >
-              <_Col><SampleSpots casenum={ casethree }/></_Col>
-            </_Row>
-            <_Row >
-              <_Col><SampleSpots casenum={ casefour }/></_Col>
-            </_Row>
-            </_Col>
-          </_Row>
+          </_Col>
+        </_Row>
      </div>
     )
   }
-});
+   return observer({
+    componentDidMount,
+    render,
+  });
+}));
   export default SamplePresent;
