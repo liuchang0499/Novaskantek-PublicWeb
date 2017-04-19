@@ -5,7 +5,7 @@ import request from 'request'
 import _Row from 'antd/lib/row';
 import _Col from 'antd/lib/col';
 import { observer, inject } from 'mobx-react';
-import { Button,Modal, Input, Menu, Dropdown, Icon, message, Radio } from 'antd';
+import { Button,Modal, Input, Menu, Dropdown, Icon, message, Radio,Tabs } from 'antd';
 
 const heading= '产品介绍';
 const sub_heading= 'AnSense  Online';
@@ -38,6 +38,9 @@ const h2_3 = ' • 多路复用多大8个采样点 ';
 const h2_4 = ' • 扩展数据通信和交换功能 ';
 const text_1 = '厌氧消化池常常被认为是自动调节的，但需要对关键参数进行检测，以获得最佳的效果。然而，由于用于厌氧消化的大多数分析方法具有昂贵或费时的特性，工业沼气池通常不广泛检测。出了几个参数，如 PH 值和气体流量。这就是为什么在现实中全面沼气池的商业开发往往受限的原因。运营商宁愿保持承载率相对较低以确保安全';
 const text_2 = '工艺效率、性能和产气量在今天的全面沼气池成了次要的。实验室测量，如 GC-MS，用于确定个别挥发性脂肪酸，是非常有选择的方法，但无助于过程控制和透明度。他们常常需要长时间的准备步骤和引起系统性的分析错误，还不算每次分析的高成本。';
+
+const TabPane = Tabs.TabPane;
+
 const maincategorymenu = (
   <Menu>
     <Menu.Item key="1">1st menu item</Menu.Item>
@@ -135,8 +138,43 @@ const styles = {
   },
   modalrow:{
     padding: '8px 0px',
+  },
+  tabPane:{
+    fontWeight: 'bold',
+    fontSize: '23px',
+    marginLeft:'-10px',
+    marginRight:'-10px'
   }
 }
+
+const ParameterSpots = function ParameterSpots(props) {
+  function render() {
+    return (
+      <div>
+       <_Row>
+        <_Col span={9}>
+          <ul style={ styles.list_item }>
+              <li style={ styles.list_item_li }> { h1_1 }</li>
+              <li style={ styles.list_item_li }> { h1_2 }</li>
+              <li style={ styles.list_item_li }> { h1_3 }</li>
+              <li style={ styles.list_item_li }> { h1_4 }</li>
+            </ul>
+        </_Col>
+        <_Col span={9} offset={2}>
+            <ul style={ styles.list_item }>
+              <li style={ styles.list_item_li }> { h2_1 }</li>
+              <li style={ styles.list_item_li }> { h2_2 }</li>
+              <li style={ styles.list_item_li }> { h2_3 }</li>
+              <li style={ styles.list_item_li }> { h2_4 }</li>
+            </ul>
+        </_Col>
+      </_Row>
+       </div>
+    )
+  }
+  return render();
+}
+
 
 const Pic = (inject('store')(function Dconsult (props){
 
@@ -265,32 +303,30 @@ const Pic = (inject('store')(function Dconsult (props){
             <_Row type="flex" justify="center" >
               <_Col style={ styles.straightline_top } ></_Col>
             </_Row>
-             <_Row >
-              <_Col span={14} offset={5}>
-                <h4 style={ styles.footer_bold} > { option_text }</h4>
+            <_Row >
+              <_Col span={14} offset={5}> 
+                <Tabs tabPosition="top" defaultActiveKey="1" >
+                  <TabPane tab={<span style={styles.tabPane}> 主要特点  |</span>} key="1">
+                    <ParameterSpots></ParameterSpots>
+                  </TabPane>
+                  <TabPane tab={<span style={styles.tabPane}> 技术参数  |</span>} key="2">
+                    <ParameterSpots></ParameterSpots>
+                  </TabPane>
+                  <TabPane tab={<span style={styles.tabPane}> 应用领域  |</span>} key="3">
+                    <ParameterSpots></ParameterSpots>
+                  </TabPane>
+                  <TabPane tab={<span style={styles.tabPane}> 可选配件  |</span>} key="4">
+                    <ParameterSpots></ParameterSpots>
+                  </TabPane>
+                  <TabPane tab={<span style={styles.tabPane}> 类似产品</span>} key="5">
+                    <ParameterSpots></ParameterSpots>
+                  </TabPane>
+                </Tabs>
               </_Col>
             </_Row>
             <_Row >
               <_Col span={14} offset={5} style={ styles.straightline } ></_Col>
             </_Row>
-          </_Row>
-          <_Row type="flex" justify="center">
-            <_Col span={8} offset={2}>
-              <ul style={ styles.list_item }>
-                  <li style={ styles.list_item_li }> { h1_1 }</li>
-                  <li style={ styles.list_item_li }> { h1_2 }</li>
-                  <li style={ styles.list_item_li }> { h1_3 }</li>
-                  <li style={ styles.list_item_li }> { h1_4 }</li>
-                </ul>
-            </_Col>
-            <_Col span={8} >
-                <ul style={ styles.list_item }>
-                  <li style={ styles.list_item_li }> { h2_1 }</li>
-                  <li style={ styles.list_item_li }> { h2_2 }</li>
-                  <li style={ styles.list_item_li }> { h2_3 }</li>
-                  <li style={ styles.list_item_li }> { h2_4 }</li>
-                </ul>
-            </_Col>
           </_Row>
         </div>
    )

@@ -1,6 +1,9 @@
 import React from 'react';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import { render } from 'react-dom';
+import mobx from 'mobx';
+import { observer, inject, toJS } from 'mobx-react';
+import request from 'superagent';
 import { Row, Col, Button } from 'antd';
 import _Card from 'antd/lib/card';
 
@@ -53,13 +56,13 @@ const styles = {
   }
 }
 
-const Product = function Product() {
+const Product = function Product(props) {
   function render() {
     return (
       <_Card bodyStyle={{ padding: 0, textAlign: 'center' }}>
         <div className="custom-card">
-          <h3 style={ styles.fontbold }>{ name }</h3>
-          <p style={ styles.fontmiddle }>{ description }  {descriptor} </p>
+          <h3 style={ styles.fontbold }>{ props.name }</h3>
+          <p style={ styles.fontmiddle }>{ props.description }  {descriptor} </p>
 
         </div>
         <div>
@@ -75,9 +78,38 @@ const Product = function Product() {
   return render();
 }
 
+const ProductList = (inject('store')(function ProductList (props){
+  function render(){
+    return(
+        <Row style={styles.rowspace}>
+          { props.store.sampleList.map(function(num){
+            return(
+              <Col span={4} offset={2}>
+               <Product name={ num.accessoriesName} description={ num.accessoriesDescription}></Product>
+              </Col>
+            )
+          }) 
+        }   
+        </Row>
+      )
+    }
+    return observer({
+    render,
+  });
+}));
 
-const Sshow = React.createClass ({
-  render(){
+
+
+const Sshow = (inject('store')(function Sshow (props){
+    function componentDidMount(){
+    console.log('Sshow mount', this);
+    request.get('/api/accessories')
+      .end(function(err, res){
+      console.log('list add successful');
+      props.store.setSampleList(res.body);
+    })
+  }
+  function render(){
     return (
         <div style={{ paddingTop: '200px', 'paddingBottom':'60px'}}>
           <Row>
@@ -108,11 +140,18 @@ const Sshow = React.createClass ({
              <Product/>
             </Col>
           </Row>
+          <Row style={styles.rowspace}>
+            <ProductList></ProductList>
+          </Row>
           <Row>
             <Col span={3} offset={11}> <Button type="ghost" style={styles.button_load}>{ button_load }</Button> </Col>
           </Row>
       </div>
     )
   }
-});
+return observer({
+    componentDidMount,
+    render,
+  });
+}));
 export default Sshow;

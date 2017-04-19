@@ -1,8 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router';
+import { Pagination, Collapse} from 'antd';
+import mobx from 'mobx';
+import { observer, inject, toJS } from 'mobx-react';
+import request from 'superagent';
 import _Row from 'antd/lib/row';
 import _Col from 'antd/lib/col';
-import { Pagination, Collapse} from 'antd';
 
 const Panel = Collapse.Panel;
 const heading ='这里，您能找到需要的解决方案';
@@ -48,8 +51,17 @@ const styles = {
   },
 }
 
-const Qtable = React.createClass ({
-  render() {
+const Qtable = (inject('store')(function Qtable(props){
+    function componentDidMount(){
+      console.log('Questionpresent mount', this);
+      request.get('/api/question')
+        .end(function(err, res){
+        console.log('list add successful');
+        props.store.setQuestionList(res.body);
+      })
+    }
+
+  function render() {
     return (
     	<div style= {{ 'paddingTop': '120px', 'paddingBottom':'60px' }}>
      	 	<_Row type="flex" justify="center">
@@ -64,7 +76,7 @@ const Qtable = React.createClass ({
     	  <_Row>
 				  <_Col span={16} offset={4}>
             <Collapse bordered={false} defaultActiveKey={['1']}>
-              <Panel header= {question1} style={styles.question} key="1">
+              {/*<Panel header= {question1} style={styles.question} key="1">
                 <p style={styles.answer}>{answer1}</p>
               </Panel>
               <Panel header= {question2} style={styles.question} key="2">
@@ -84,7 +96,15 @@ const Qtable = React.createClass ({
               </Panel>
               <Panel header= {question7} style={styles.question} key="7">
                 <p style={styles.answer}>{answer1}</p>
-              </Panel>
+              </Panel>*/}
+               { props.store.questionList.map(function(que){
+                  return(
+                    <Panel header= {que.questionTitle} style={styles.question} key={que.questionNo}>
+                     <p style={styles.answer}>{que.questionAnswer}</p>
+                    </Panel>
+                  )
+                }) 
+              }   
             </Collapse>
             </_Col>
          </_Row>
@@ -94,5 +114,9 @@ const Qtable = React.createClass ({
 	    </div>
     );
   }
-});
+  return observer({
+    componentDidMount,
+    render,
+  });
+}));
 export default Qtable;

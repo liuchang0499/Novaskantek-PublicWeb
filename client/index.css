@@ -101,6 +101,18 @@ border-color: #1ED760;
   box-shadow: none;
   z-index: 0;
 }
+.ant-tabs-ink-bar {
+  background-color: #1ED760;
+}
+.ant-tabs-nav .ant-tabs-tab-active {
+    color: #3c454b;
+}
+.ant-tabs-nav .ant-tabs-tab:hover {
+    color: #3c454b;
+}
+.ant-tabs-nav .ant-tabs-tab:hover {
+    color: #3c454b;
+}
 .bg_gray{
   background-color: #EEEEEE;
   margin-bottom: 25px;

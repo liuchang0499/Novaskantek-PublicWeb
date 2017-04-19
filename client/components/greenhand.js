@@ -2,6 +2,7 @@ import React from 'react';
 import { render } from 'react-dom';
 import _Row from 'antd/lib/row';
 import _Col from 'antd/lib/col';
+import { Tabs } from 'antd';
 
 const heading='欢迎进入新手入门';
 const princeple='厌氧消化原理';
@@ -17,6 +18,8 @@ const stage='6.产生沼气的三个阶段（也有理解成四个阶段的）';
 const category='7.厌氧消化过程中的五大类群细菌';
 const digestion_content='厌氧消化指各种有机物在厌氧条件下，被各类厌氧消化微生物分解转化，最终产生沼气的全过程。';
 const category_content='厌氧小环过程中的五大类群的细菌分别是：a)发酵性细菌b)产氢产乙酸菌c)耗氢产乙酸菌d)食氢产甲烷菌e)食乙酸产甲烷菌';
+
+const TabPane = Tabs.TabPane;
 
 const styles = {
   circle:{
@@ -53,6 +56,12 @@ const styles = {
     overflow:'hidden',
     height:'1px'
   },
+  imgsize:{
+    height:'160px',
+    width:'160px',
+    marginLeft:'15px',
+    marginRight:'10px'
+  },
 }
 
 const GuideSpots = function GuideSpots(props) {
@@ -60,13 +69,13 @@ const GuideSpots = function GuideSpots(props) {
     return (
       <div>
         <_Row>
-          <_Col style={styles.cell} span={13} offset={5}>
+          <_Col style={styles.cell} >
             <h2>{props.header}</h2>
             <p style={styles.content}>{props.content}</p>
           </_Col>
         </_Row>
         <_Row>
-          <_Col span ={13} offset={5} style={ styles.straightline_long_break}></_Col>
+          <_Col style={ styles.straightline_long_break}></_Col>
         </_Row>
        </div>
     )
@@ -74,38 +83,10 @@ const GuideSpots = function GuideSpots(props) {
   return render();
 }
 
-const Greenhand = React.createClass ({
-  render(){
+const GuideSpotsList = function GuideSpotsList(props) {
+  function render() {
     return (
-      <div style= {{ 'paddingTop': '120px', 'paddingBottom':'60px' }}>
-        <_Row type="flex" justify="center">
-          <_Col><img style={styles.circle} src="http://fakeimg.pl/125x125/"/></_Col>
-        </_Row>
-         <_Row type="flex" justify="center">
-          <_Col style={ styles.centre }> <p style={ styles.headingfont }>{ heading }</p> </_Col>
-        </_Row>
-        <_Row >
-          <_Col span={13} offset={5} style={ styles.straightline_long } ></_Col>
-        </_Row>
-        <_Row type="flex" justify="space-around" >
-           <_Col span={12}>
-             <_Col span={4} offset={1}>
-               <img style={styles.imgsize} src="/images/princeple.png" />
-             </_Col>
-             <_Col span={4} offset={2} >
-               <img style={styles.imgsize} src="/images/material.png" />
-             </_Col>
-             <_Col span={4} offset={2} >
-               <img style={styles.imgsize} src="/images/condition.png" />
-             </_Col>
-             <_Col span={4} offset={2} >
-               <img style={styles.imgsize} src="/images/machine.png" />
-             </_Col>
-           </_Col>
-        </_Row>
-        <_Row >
-          <_Col span={13} offset={5} style={ styles.straightline_long } ></_Col>
-        </_Row>
+      <div>
         <_Row>
           <_Row>
             <GuideSpots header={digestion} content={digestion_content}/>
@@ -129,6 +110,52 @@ const Greenhand = React.createClass ({
             <GuideSpots header={category} content={digestion_content}/>
           </_Row>
         </_Row>
+       </div>
+    )
+  }
+  return render();
+}
+
+const Greenhand = React.createClass ({
+  render(){
+    return (
+      <div style= {{ 'paddingTop': '120px', 'paddingBottom':'60px' }}>
+        <_Row type="flex" justify="center">
+          <_Col><img style={styles.circle} src="http://fakeimg.pl/125x125/"/></_Col>
+        </_Row>
+         <_Row type="flex" justify="center">
+          <_Col style={ styles.centre }> <p style={ styles.headingfont }>{ heading }</p> </_Col>
+        </_Row>
+        <_Row >
+          <_Col span={13} offset={5} style={ styles.straightline_long } ></_Col>
+        </_Row>
+        <_Row >
+          <_Col span={13} offset={5}>
+            <Tabs tabPosition="top" defaultActiveKey="1" >
+              <TabPane span={6} tab={<span><img style={styles.imgsize} src="/images/princeple.png" /></span>} key="1">
+                <_Row>
+                  <GuideSpotsList></GuideSpotsList>
+                </_Row>
+              </TabPane>
+              <TabPane span={6} tab={<span><img style={styles.imgsize} src="/images/material.png" /></span>} key="2">
+                <_Row>
+                  <GuideSpotsList></GuideSpotsList>
+                </_Row>
+              </TabPane>
+              <TabPane span={6} tab={<span><img style={styles.imgsize} src="/images/condition.png" /></span>} key="3">
+                <_Row>
+                  <GuideSpotsList></GuideSpotsList>
+                </_Row>
+              </TabPane>
+              <TabPane span={6} tab={<span><img style={styles.imgsize} src="/images/machine.png" /></span>} key="4">
+                <_Row>
+                  <GuideSpotsList></GuideSpotsList>
+                </_Row>
+              </TabPane>
+            </Tabs>
+          </_Col>
+        </_Row>
+       
       </div>
     )
   }

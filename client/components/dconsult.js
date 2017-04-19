@@ -83,11 +83,13 @@ const Dconsult = Form.create()(inject('store')(function Dconsult (props){
   }
 
   function handleSubmit(e) {
+    e.preventDefault();
     props.form.validateFields((err, values) => {
       if (!err) {
-        console.log('Received values of form: ', values);
+       console.log('Received values of form: ',values)
+       props.store.findOrder(values);
       }
-    });
+      });
   }
 
   function showModal(e) {
@@ -120,11 +122,14 @@ const Dconsult = Form.create()(inject('store')(function Dconsult (props){
             <_Col span={8} offset={8}>
               <Form inline onSubmit={handleSubmit}>
                 <FormItem>
-                  {getFieldDecorator('userName', {
+                  {getFieldDecorator('orderNo', {
                     rules: [{ required: true, message: {hinding} }],
                   })(
-                    <Input ddonBefore={<Icon type="user" />} style={styles.textinput} placeholder={ hinding } />
+                    <Input style={styles.textinput} placeholder={ hinding } />
                   )}
+                </FormItem>
+                 <FormItem>
+                  <Button type="primary" htmlType="submit" >submit</Button>
                 </FormItem>
               </Form>
             </_Col>

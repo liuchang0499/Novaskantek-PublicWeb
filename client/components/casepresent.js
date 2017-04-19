@@ -13,12 +13,15 @@ const caseone= '案例一';
 const casetwo= '案列二';
 const casethree= '案列三';
 const casefour= '案例四';
-
 const styles = {
   centre:{
     textAlign:'center',
     marginTop:'35px',
     marginBottom:'25px',
+  },
+  heroImage: {
+    width:'300px',
+    height:'200px',
   },
   headingfont:{
     fontWeight: 'bold',
@@ -38,26 +41,34 @@ const styles = {
   conpsize:{
     margin:'0',
     position:'relative',
-    float:'left'
+    float:'left',
+    width:'300px',
+    height:'180px'
   },
-  p:{
-    fontSize:'14px',
+  title:{
+    fontSize:'16px',
     marginBottom: '10px',
     marginTop:'10px',
+  },
+  discription:{
+    fontSize:'14px',
+    marginBottom: '5px',
+    marginTop:'5px',
   }
 }
-
 const CaseList = (inject('store')(function CaseList (props){
   function render(){
-    // const solutionLists=props.store.solutionList;
     return(
         <div>
           { props.store.solutionList.map(function(num){
             return(
               <_Card style={{  }} bordered={false} bodyStyle={{ padding: 0 }}>
                 <div className="bg_gray">
-                  <_Col span={8}><img src="http://fakeimg.pl/350x200/" style={styles.conpsize }/></_Col>
-                  <_Col span={16}><p style={ styles.p }>{ num.applicationName }</p></_Col>
+                  <_Col span={6}><img src={ num.heroImage.url } style={styles.conpsize }/></_Col>
+                  <_Col span={17} offset={1}>
+                    <p style={ styles.title }>{ num.applicationName }</p>
+                    <p style={ styles.discription }>{ num.applicationDescription }</p>
+                  </_Col>
                 </div>
               </_Card>
             )
@@ -74,25 +85,20 @@ const CaseList = (inject('store')(function CaseList (props){
 const CasePresent = (inject('store')(function CasePresent (props){
    function componentDidMount(){
     console.log('Solution mount', this);
-    console.log('fetchApplication');
     request.get('/api/application')
       .end(function(err, res){
-      console.log(err, res);
-      console.log('res');
-      //list=JSON.stringify(res.body);
       console.log('list add successful');
       props.store.setSolutionList(res.body);
-
     })
   }
 
   function render(){
     return (
       <div style= {{ 'paddingTop': '120px', 'paddingBottom':'60px' }}>
-        <_Row type="flex" justify="center">
+       	<_Row type="flex" justify="center">
           <_Col><img style={styles.circle} src="http://fakeimg.pl/125x125/"/></_Col>
         </_Row>
-        <_Row>
+    		<_Row>
           <_Col style={ styles.centre }><p style={ styles.headingfont }>{ heading }</p></_Col>
         </_Row>
         <_Row>

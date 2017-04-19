@@ -1,11 +1,14 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { Link } from 'react-router';
+import mobx from 'mobx';
 import _Row from 'antd/lib/row';
 import _Col from 'antd/lib/col';
 import { Collapse } from 'antd';
-const Panel = Collapse.Panel;
+import { observer, inject, toJS } from 'mobx-react';
+import request from 'superagent';
 
+const Panel = Collapse.Panel;
 const heading= '以下是我们开放申请的职位（点击标题查看职位介绍）';
 const job1= '行政助理';
 const job2= '市场助理';
@@ -52,7 +55,25 @@ const styles= {
     padding:'40px 0'
   }
 };
-
+const JobSpots = (inject('store')(function JobSpots (props){
+  function render(){
+    return(
+      <Collapse bordered={false} defaultActiveKey={['1']}>
+          { props.store.sampleList.map(function(num){
+            return(
+              <Panel header={ num.name } key="1">
+                <p>{ num.jobRole}</p>
+              </Panel>
+            )
+          }) 
+        }  
+       </Collapse>   
+      )
+    }
+    return observer({
+    render,
+  });
+}));
 
 const GallerySpots = function GallerySpots(props) {
   function render() {
@@ -100,8 +121,16 @@ const GallerySpots = function GallerySpots(props) {
   return render();
 }
 
- const Jobs = React.createClass ({
-  render(){
+ const Jobs = (inject('store')(function Jobs(props){
+  function componentDidMount(){
+    console.log('Jobs mount', this);
+    request.get('/api/job')
+      .end(function(err, res){
+      console.log('list add successful');
+      props.store.setSampleList(res.body);
+    })
+  }
+  function render(){
     return (
       <div style= {{ 'paddingTop': '120px', 'paddingBottom':'60px' }}>
         <_Row span={18} offset={3}>
@@ -117,21 +146,8 @@ const GallerySpots = function GallerySpots(props) {
         </_Row>
         <_Row>
           <_Col span={12} offset={6}>
-             <Collapse bordered={false} defaultActiveKey={['1']}>
-                <Panel header={ job1 } key="1">
-                  <p>{job1}</p>
-                </Panel>
-                <Panel header={ job2 } key="2">
-                  <p>{job1}</p>
-                </Panel>
-                <Panel header={ job3 } key="3">
-                  <p>{job1}</p>
-                </Panel>
-                <Panel header={ job4 } key="4">
-                  <p>{job1}</p>
-                </Panel>
-              </Collapse>
-              <p style={styles.p}>{email}</p>
+            <JobSpots></JobSpots>
+            <p style={styles.p}>{email}</p>
           </_Col>
         </_Row>
         <_Row>
@@ -140,6 +156,9 @@ const GallerySpots = function GallerySpots(props) {
      </div>
    )
   }
-});
-
+  return observer({
+    componentDidMount,
+    render,
+  });
+}));
 export default Jobs;

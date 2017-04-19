@@ -5,6 +5,23 @@ var Types = keystone.Field.Types;
  * Product Model
  * ==========
  */
+// storage for the files to be uploaded
+var myStorage = new keystone.Storage({
+  adapter: keystone.Storage.Adapters.FS,
+  fs: {
+    path: keystone.expandPath('./public/uploads/documents'),
+    /*publicPath: '/public/uploads/documents',*/
+    publicPath: 'http://res.cloudinary.com/dy8kdozhn/image/upload/',
+  },
+  schema: {
+    size: true,
+    mimetype: true,
+    path: true,
+    originalname: true,
+    url: true
+  }
+});
+
 var Product = new keystone.List('Product', {
 	autokey: { from: 'productName', path: 'slug', unique: true },
 	map: { name: 'productName' },
